@@ -38,7 +38,7 @@ class Program
         }
         else
         {
-            Console.WriteLine("Sorry, you failed.");
+            Console.WriteLine("Don’t get discouraged. Failing is part of learning. You’ll do better next time.");
         }
     }
 }
