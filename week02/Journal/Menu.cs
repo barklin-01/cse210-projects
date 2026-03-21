@@ -15,18 +15,18 @@ public class Menu
         while (option != 5)
         {
             Console.WriteLine("\nWelcome to your journal!");
-            Console.WriteLine("1. Write your thoughts (with prompt)");
+            Console.WriteLine("1. Write your day");
             Console.WriteLine("2. Show journal");
-            Console.WriteLine("3. Save journal to text file");
-            Console.WriteLine("4. Load journal from text file");
+            Console.WriteLine("3. Save journale");
+            Console.WriteLine("4. Load journal");
             Console.WriteLine("5. Exit");
             //I added this option to allow users to write freely without a prompt, as some may prefer that.
             Console.WriteLine("6. Write a free entry (no prompt)");
-            Console.Write("Select an option (1-6): ");
+            Console.Write("What would you like to do? ");
 
             while (!int.TryParse(Console.ReadLine(), out option) || option < 1 || option > 6)
             {
-                Console.Write("Please enter a valid option (1-6): ");
+                Console.Write("What would you like to do? Please enter a number between 1 and 6: ");
             }
 
             switch (option)
