@@ -1,3 +1,5 @@
+// For this project I added two things, Firts: I added two library, one of the Book of Mormon and the other the Bible
+// It also adds a function that asks the user which book they want to practice with, and the program continues accordingly.
 using System;
 
 class Program
