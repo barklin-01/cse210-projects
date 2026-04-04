@@ -1,28 +1,3 @@
-using System;
-using System.Collections.Generic;
-
-// Class for Comment
-public class Comment
-{
-    public string Name;
-    public string Text;
-}
-
-// Class for Video
-public class Video
-{
-    public string Title;
-    public string Author;
-    public int Length; // in seconds
-
-    public List<Comment> Comments = new List<Comment>();
-
-    // Method to get the number of comments
-    public int GetNumberOfComments()
-    {
-        return Comments.Count;
-    }
-}
 
 class Program
 {
