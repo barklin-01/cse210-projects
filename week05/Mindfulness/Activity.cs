@@ -56,7 +56,6 @@ public class Activity
             Thread.Sleep(1000);
         }
         Console.Write($"\r{message}   ");
-        Console.WriteLine();
     }
     // animacion de spinner
     public static void Spinner(string text, int seconds)
