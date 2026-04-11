@@ -1,3 +1,6 @@
+// I added a new activity called Active Breaks that provides users with a series of simple exercises to do during short breaks.
+//I put the new activity in yhe menu options.
+
 class Program
 {
     static void Main(string[] args)
