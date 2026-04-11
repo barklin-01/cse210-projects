@@ -1,3 +1,4 @@
+//I added a new activity called Active Breaks that provides users with a series of simple exercises to do during short breaks. 
 using System;
 using System.Collections.Generic;
 using System.Linq;
