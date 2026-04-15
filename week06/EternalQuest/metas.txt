@@ -1,0 +1,4 @@
+80
+Simple|Saludar|personas|True|30
+Eternal|Escritura|10min|50
+Checklist|Iglesia|asistir|50|1|2|100|False

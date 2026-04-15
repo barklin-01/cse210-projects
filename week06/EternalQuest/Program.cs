@@ -196,10 +196,10 @@ class Program
             {
                 if (parts[0] == "Simple" && parts.Length >= 4)
                 {
-                    bool isComplete = bool.Parse(parts[2]);
-                    int points = int.Parse(parts[3]);
+                    bool isComplete = bool.Parse(parts[3]);
+                    int points = int.Parse(parts[4]);
 
-                    var goal = new SimpleGoal(parts[1], "", points);
+                    var goal = new SimpleGoal(parts[1], parts[2], points);
 
                     if (isComplete)
                         goal.RecordEvent();
@@ -208,7 +208,7 @@ class Program
                 }
                 else if (parts[0] == "Eternal" && parts.Length >= 3)
                 {
-                    goals.Add(new EternalGoal(parts[1], "", int.Parse(parts[2])));
+                    goals.Add(new EternalGoal(parts[1], parts[2], int.Parse(parts[3])));
                 }
                 else if (parts[0] == "Checklist" && parts.Length >= 8)
                 {
