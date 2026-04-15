@@ -32,7 +32,7 @@ public class SimpleGoal : Goal
 
     public override string GetStringRepresentation()
     {
-        return $"Simple|{GetName()}|{_isComplete}|{GetPoints()}";
+        return $"Simple|{GetName()}|{GetDescription()}|{_isComplete}|{GetPoints()}";
     }
 
     public override string GetDisplayString()

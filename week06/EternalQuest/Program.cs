@@ -25,26 +25,27 @@ class Program
             Console.Write("Select an option: ");
             string option = Console.ReadLine();
 
+            // CREATE
             if (option == "1")
             {
                 Console.Clear();
                 Console.WriteLine("1. Simple Goal");
                 Console.WriteLine("2. Eternal Goal");
                 Console.WriteLine("3. Checklist Goal");
-                Console.Write("What type of goal would you like to create? ");
+                Console.Write("What type of goal would you like to create?: ");
                 string type = Console.ReadLine();
 
-                Console.Write("Enter name: ");
+                Console.Write("Name: ");
                 string name = Console.ReadLine();
 
-                Console.Write("Enter description: ");
+                Console.Write("Description: ");
                 string description = Console.ReadLine();
 
                 int points;
-                Console.Write("Enter points: ");
+                Console.Write("Points: ");
                 while (!int.TryParse(Console.ReadLine(), out points))
                 {
-                    Console.Write("Invalid input. Enter a number for points: ");
+                    Console.Write("Invalid number: ");
                 }
 
                 if (type == "1")
@@ -58,17 +59,17 @@ class Program
                 else if (type == "3")
                 {
                     int target;
-                    Console.Write("How many times to complete? ");
+                    Console.Write("How many times to complete?: ");
                     while (!int.TryParse(Console.ReadLine(), out target))
                     {
-                        Console.Write("Invalid input: ");
+                        Console.Write("Invalid: ");
                     }
 
                     int bonus;
-                    Console.Write("Bonus points: ");
+                    Console.Write("Bonus points ");
                     while (!int.TryParse(Console.ReadLine(), out bonus))
                     {
-                        Console.Write("Invalid input: ");
+                        Console.Write("Invalid: ");
                     }
 
                     goals.Add(new ChecklistGoal(name, description, points, target, bonus));
@@ -76,6 +77,8 @@ class Program
 
                 Console.Clear();
             }
+
+            // RECORD EVENT
             else if (option == "2")
             {
                 Console.Clear();
@@ -91,22 +94,24 @@ class Program
                     Console.WriteLine($"{i}. {goals[i].GetStatus()} {goals[i].GetName()}");
                 }
 
-                Console.Write("Select a goal: ");
+                Console.Write("Select goal: ");
 
                 int index;
                 while (!int.TryParse(Console.ReadLine(), out index) || index < 0 || index >= goals.Count)
                 {
-                    Console.Write("Invalid selection. Try again: ");
+                    Console.Write("Invalid: ");
                 }
 
                 int earned = goals[index].RecordEvent();
                 score += earned;
 
-                Console.WriteLine($"Event recorded! You earned {earned} points.");
-                Console.WriteLine($"Your current score now is: {score}");
-                Console.WriteLine("Press Enter to continue...");
+                Console.WriteLine($"You earned {earned} points!");
+                Console.WriteLine($"Total score: {score}");
+                Console.WriteLine("Press Enter...");
                 Console.ReadLine();
             }
+
+            // LIST
             else if (option == "3")
             {
                 foreach (var goal in goals)
@@ -117,6 +122,8 @@ class Program
                 Console.WriteLine("Press Enter...");
                 Console.ReadLine();
             }
+
+            // SAVE
             else if (option == "4")
             {
                 Console.Write("Filename: ");
@@ -127,6 +134,8 @@ class Program
                 Console.WriteLine("Saved!");
                 Console.ReadLine();
             }
+
+            // LOAD (FIXED)
             else if (option == "5")
             {
                 Console.Write("Filename: ");
@@ -139,6 +148,8 @@ class Program
                 Console.WriteLine("Loaded!");
                 Console.ReadLine();
             }
+
+            // EXIT
             else if (option == "6")
             {
                 break;
@@ -159,6 +170,7 @@ class Program
         File.WriteAllLines(filename, lines);
     }
 
+    // 🔥 MÉTODO CORREGIDO
     static (List<Goal>, int) LoadGoals(string filename)
     {
         List<Goal> goals = new List<Goal>();
@@ -178,41 +190,55 @@ class Program
         {
             string[] parts = lines[i].Split('|');
 
-            if (parts[0] == "Simple")
+            if (parts.Length == 0) continue;
+
+            try
             {
-                bool isComplete = bool.Parse(parts[2]);
-                int points = int.Parse(parts[3]);
+                if (parts[0] == "Simple" && parts.Length >= 4)
+                {
+                    bool isComplete = bool.Parse(parts[2]);
+                    int points = int.Parse(parts[3]);
 
-                var goal = new SimpleGoal(parts[1], parts[2], points);
+                    var goal = new SimpleGoal(parts[1], "", points);
 
-                if (isComplete)
-                    goal.RecordEvent();
+                    if (isComplete)
+                        goal.RecordEvent();
 
-                goals.Add(goal);
+                    goals.Add(goal);
+                }
+                else if (parts[0] == "Eternal" && parts.Length >= 3)
+                {
+                    goals.Add(new EternalGoal(parts[1], "", int.Parse(parts[2])));
+                }
+                else if (parts[0] == "Checklist" && parts.Length >= 8)
+                {
+                    string name = parts[1];
+                    string desc = parts[2];
+                    int points = int.Parse(parts[3]);
+                    int current = int.Parse(parts[4]);
+                    int target = int.Parse(parts[5]);
+                    int bonus = int.Parse(parts[6]);
+                    bool bonusGiven = bool.Parse(parts[7]);
+
+                    var goal = new ChecklistGoal(name, desc, points, target, bonus);
+
+                    for (int j = 0; j < current; j++)
+                        goal.RecordEvent();
+
+                    goals.Add(goal);
+                }
+                else
+                {
+                    Console.WriteLine($"⚠ Skipping invalid line: {lines[i]}");
+                }
             }
-            else if (parts[0] == "Eternal")
+            catch
             {
-                goals.Add(new EternalGoal(parts[1], parts[2], int.Parse(parts[3])));
-            }
-            else if (parts[0] == "Checklist")
-            {
-                string name = parts[1];
-                string desc = parts[2];
-                int points = int.Parse(parts[3]);
-                int current = int.Parse(parts[4]);
-                int target = int.Parse(parts[5]);
-                int bonus = int.Parse(parts[6]);
-                bool bonusGiven = bool.Parse(parts[7]);
-
-                var goal = new ChecklistGoal(name, desc, points, target, bonus);
-
-                for (int j = 0; j < current; j++)
-                    goal.RecordEvent();
-
-                goals.Add(goal);
+                Console.WriteLine($"❌ Error reading line: {lines[i]}");
             }
         }
 
         return (goals, score);
     }
 }
+
