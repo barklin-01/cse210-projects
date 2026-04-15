@@ -5,6 +5,7 @@ public class ChecklistGoal : Goal
     private int _targetCount;
     private int _currentCount;
     private int _bonus;
+    private bool _bonusGiven;
 
     public ChecklistGoal(string name, string description, int points, int targetCount, int bonus)
         : base(name, description, points)
@@ -12,26 +13,27 @@ public class ChecklistGoal : Goal
         _targetCount = targetCount;
         _bonus = bonus;
         _currentCount = 0;
+        _bonusGiven = false;
     }
 
     public override int RecordEvent()
     {
-        if (_currentCount >= _targetCount)
+        if (IsComplete())
         {
-            return 0;
+            return 0; // ya está completo
         }
 
         _currentCount++;
 
-        int earned = _points;
+        int total = GetPoints();
 
-        // bonus SOLO cuando se completa todo
-        if (_currentCount == _targetCount)
+        if (_currentCount == _targetCount && !_bonusGiven)
         {
-            earned += _bonus;
+            total += _bonus;
+            _bonusGiven = true;
         }
 
-        return earned;
+        return total;
     }
 
     public override bool IsComplete()
@@ -46,11 +48,11 @@ public class ChecklistGoal : Goal
 
     public override string GetStringRepresentation()
     {
-        return $"Checklist|{GetName()}|{_currentCount}|{_targetCount}|{_bonus}|{GetPoints()}";
+        return $"Checklist|{GetName()}|{GetDescription()}|{GetPoints()}|{_currentCount}|{_targetCount}|{_bonus}|{_bonusGiven}";
     }
 
     public override string GetDisplayString()
     {
-        return $"{GetStatus()} {GetName()} ({GetDescription()}) -- Currently completed: {_currentCount}/{_targetCount}";
+        return $"{GetStatus()} {GetName()} ({GetDescription()}) -- {_currentCount}/{_targetCount}";
     }
 }

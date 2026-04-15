@@ -105,8 +105,10 @@ class Program
                     Console.Write("Invalid selection. Try again: ");
                 }
 
-                score += goals[index].RecordEvent();
-                Console.WriteLine($"Event recorded! You earned {goals[index].GetPoints()} points.");
+                int earned = goals[index].RecordEvent();
+                score += earned;
+
+                Console.WriteLine($"Event recorded! You earned {earned} points.");
                 Console.WriteLine($"Your current score now is: {score}");
                 Console.WriteLine("Press Enter to continue...");
                 Console.ReadLine();
