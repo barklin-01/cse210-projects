@@ -25,9 +25,6 @@ class Program
             Console.Write("Select an option: ");
             string option = Console.ReadLine();
 
-            // ---------------------------
-            // 1. CREATE GOAL
-            // ---------------------------
             if (option == "1")
             {
                 Console.Clear();
@@ -79,13 +76,10 @@ class Program
 
                 Console.Clear();
             }
-
-            // ---------------------------
-            // 2. RECORD EVENT
-            // ---------------------------
             else if (option == "2")
             {
                 Console.Clear();
+
                 if (goals.Count == 0)
                 {
                     Console.WriteLine("No goals available.");
@@ -113,10 +107,6 @@ class Program
                 Console.WriteLine("Press Enter to continue...");
                 Console.ReadLine();
             }
-
-            // ---------------------------
-            // 3. LIST GOALS
-            // ---------------------------
             else if (option == "3")
             {
                 foreach (var goal in goals)
@@ -124,47 +114,31 @@ class Program
                     Console.WriteLine(goal.GetDisplayString());
                 }
 
-                Console.WriteLine("Press Enter to continue...");
+                Console.WriteLine("Press Enter...");
                 Console.ReadLine();
             }
-
-            // ---------------------------
-            // 4. SAVE
-            // ---------------------------
             else if (option == "4")
             {
-                Console.Write("What is the filename for the goal file? ");
+                Console.Write("Filename: ");
                 string filename = Console.ReadLine();
 
                 SaveGoals(goals, score, filename);
 
-                Console.WriteLine("Saved successfully!");
-                Console.WriteLine();
-                Console.WriteLine("Press Enter to continue...");
+                Console.WriteLine("Saved!");
                 Console.ReadLine();
             }
-
-            // ---------------------------
-            // 5. LOAD (FIXED)
-            // ---------------------------
             else if (option == "5")
             {
-                Console.Write("Filename to load: ");
+                Console.Write("Filename: ");
                 string filename = Console.ReadLine();
 
                 var data = LoadGoals(filename);
                 goals = data.Item1;
                 score = data.Item2;
 
-                Console.WriteLine("Loaded successfully!");
-                Console.WriteLine();
-                Console.WriteLine("Press Enter to continue...");    
+                Console.WriteLine("Loaded!");
                 Console.ReadLine();
             }
-
-            // ---------------------------
-            // 6. EXIT
-            // ---------------------------
             else if (option == "6")
             {
                 break;
@@ -172,9 +146,6 @@ class Program
         }
     }
 
-    // ---------------------------
-    // SAVE
-    // ---------------------------
     static void SaveGoals(List<Goal> goals, int score, string filename)
     {
         List<string> lines = new List<string>();
@@ -188,66 +159,55 @@ class Program
         File.WriteAllLines(filename, lines);
     }
 
-    // ---------------------------
-    // LOAD (SAFE)
-    // ---------------------------
     static (List<Goal>, int) LoadGoals(string filename)
     {
         List<Goal> goals = new List<Goal>();
         int score = 0;
 
         if (!File.Exists(filename))
-        {
             return (goals, 0);
-        }
 
         string[] lines = File.ReadAllLines(filename);
 
         if (lines.Length == 0)
-        {
             return (goals, 0);
-        }
 
         int.TryParse(lines[0], out score);
 
         for (int i = 1; i < lines.Length; i++)
         {
-            string[] parts = lines[i].Split("|");
+            string[] parts = lines[i].Split('|');
 
             if (parts[0] == "Simple")
             {
                 bool isComplete = bool.Parse(parts[2]);
                 int points = int.Parse(parts[3]);
 
-                var goal = new SimpleGoal(parts[1], "", points);
+                var goal = new SimpleGoal(parts[1], parts[2], points);
 
                 if (isComplete)
-                {
                     goal.RecordEvent();
-                }
 
                 goals.Add(goal);
             }
             else if (parts[0] == "Eternal")
             {
-                goals.Add(new EternalGoal(parts[1], "", int.Parse(parts[2])));
+                goals.Add(new EternalGoal(parts[1], parts[2], int.Parse(parts[3])));
             }
             else if (parts[0] == "Checklist")
             {
-                var goal = new ChecklistGoal(
-                    parts[1],
-                    "",
-                    int.Parse(parts[5]),
-                    int.Parse(parts[3]),
-                    int.Parse(parts[4])
-                );
+                string name = parts[1];
+                string desc = parts[2];
+                int points = int.Parse(parts[3]);
+                int current = int.Parse(parts[4]);
+                int target = int.Parse(parts[5]);
+                int bonus = int.Parse(parts[6]);
+                bool bonusGiven = bool.Parse(parts[7]);
 
-                int count = int.Parse(parts[2]);
+                var goal = new ChecklistGoal(name, desc, points, target, bonus);
 
-                for (int j = 0; j < count; j++)
-                {
+                for (int j = 0; j < current; j++)
                     goal.RecordEvent();
-                }
 
                 goals.Add(goal);
             }

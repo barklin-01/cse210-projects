@@ -1,4 +1,0 @@
-250
-Simple|Saluar|True|50
-Eternal|Escritura|100
-Checklist|Iglesia|2|4|10|100
